@@ -1,6 +1,7 @@
 package net.electrodash24.mojang_works_a_lot_mod;
 
 import com.mojang.logging.LogUtils;
+import net.electrodash24.mojang_works_a_lot_mod.block.ModBlocks;
 import net.electrodash24.mojang_works_a_lot_mod.entity.ModEntities;
 import net.electrodash24.mojang_works_a_lot_mod.entity.client.BruteRenderer;
 import net.electrodash24.mojang_works_a_lot_mod.item.ModCreativeModeTabs;
@@ -41,7 +42,9 @@ public class MWALmod
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModCreativeModeTabs.register(modEventBus);
+
         ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
         ModEntities.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);

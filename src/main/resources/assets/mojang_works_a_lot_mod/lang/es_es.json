@@ -1,5 +1,7 @@
 {
   "item.mojang_works_a_lot_mod.ruby": "Rubí",
   "item.mojang_works_a_lot_mod.illager_brute_spawn_egg": "Huevo de Illager Bruto",
-  "creativetab.mwal_ingredients_tab": "MWAL - Ingredientes"
+  "block.mojang_works_a_lot_mod.ruby_block": "Bloque de Rubí",
+  "creativetab.mwal_ingredients_tab": "MWAL - Ingredientes",
+  "creativetab.mwal_blocks_tab": "MWAL - Bloques"
 }

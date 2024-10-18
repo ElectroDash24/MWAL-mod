@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "mojang_works_a_lot_mod:block/ruby_block"
+  }
+}
