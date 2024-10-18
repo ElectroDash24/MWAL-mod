@@ -1,6 +1,10 @@
 package net.electrodash24.mojang_works_a_lot_mod;
 
 import com.mojang.logging.LogUtils;
+import net.electrodash24.mojang_works_a_lot_mod.entity.ModEntities;
+import net.electrodash24.mojang_works_a_lot_mod.entity.client.BruteRenderer;
+import net.electrodash24.mojang_works_a_lot_mod.item.ModItems;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -28,16 +32,13 @@ public class MWALmod
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Register the commonSetup method for modloading
+        ModItems.register(modEventBus);
+        ModEntities.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
 
-        // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
-
-        // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
@@ -66,7 +67,7 @@ public class MWALmod
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-
+            EntityRenderers.register(ModEntities.BRUTE.get(), BruteRenderer::new);
         }
     }
 }
