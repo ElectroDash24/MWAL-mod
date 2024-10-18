@@ -3,8 +3,13 @@ package net.electrodash24.mojang_works_a_lot_mod;
 import com.mojang.logging.LogUtils;
 import net.electrodash24.mojang_works_a_lot_mod.entity.ModEntities;
 import net.electrodash24.mojang_works_a_lot_mod.entity.client.BruteRenderer;
+import net.electrodash24.mojang_works_a_lot_mod.item.ModCreativeModeTabs;
 import net.electrodash24.mojang_works_a_lot_mod.item.ModItems;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -17,7 +22,10 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
+
+import java.util.List;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(MWALmod.MODID)
@@ -32,6 +40,7 @@ public class MWALmod
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        ModCreativeModeTabs.register(modEventBus);
         ModItems.register(modEventBus);
         ModEntities.register(modEventBus);
 
@@ -50,7 +59,18 @@ public class MWALmod
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
+        if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
+            addItemsToCreativeTab("spawn_eggs", event);
+        }
+    }
 
+    private static void addItemsToCreativeTab(String category, BuildCreativeModeTabContentsEvent event) {
+        List<RegistryObject<Item>> items = ModItems.itemCategories.get(category);
+        if (items != null) {
+            for (RegistryObject<Item> item : items) {
+                event.accept(item);
+            }
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

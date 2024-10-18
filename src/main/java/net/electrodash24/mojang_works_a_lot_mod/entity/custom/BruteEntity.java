@@ -28,7 +28,7 @@ public class BruteEntity extends AbstractIllager {
     }
 
     public final AnimationState idleAnimationState = new AnimationState();
-    private int idleAnimationTimeout = 0;
+    private float idleAnimationTimeout = 0.3f;
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
@@ -47,7 +47,7 @@ public class BruteEntity extends AbstractIllager {
     }
 
     private void setupAnimationStates(){
-        if(this.idleAnimationTimeout <= 0){
+        if(this.idleAnimationTimeout <= 0.0f){
             this.idleAnimationTimeout = this.random.nextInt(40)+80;
             this.idleAnimationState.start(this.tickCount);
         } else {
