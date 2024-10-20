@@ -1,0 +1,14 @@
+{
+  "type": "mojang_works_a_lot_mod:add_item",
+  "conditions": [
+    {
+      "block": "minecraft:diorite",
+      "condition": "minecraft:block_state_property"
+    },
+    {
+      "chance": 0.05,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "item": "minecraft:quartz"
+}

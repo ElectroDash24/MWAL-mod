@@ -1,0 +1,4 @@
+// 1.20.1	2024-10-20T17:07:41.9063614	Global Loot Modifiers : mojang_works_a_lot_mod
+c849377aaeecb25853871799e7252e8c74c2d494 data/forge/loot_modifiers/global_loot_modifiers.json
+f18076c64665784e25900b40c496ceb6830fd080 data/mojang_works_a_lot_mod/loot_modifiers/quartz_from_diorite.json
+c7444690791524be0ea91e59787da022e782bd32 data/mojang_works_a_lot_mod/loot_modifiers/ruby_from_jungle_chests.json

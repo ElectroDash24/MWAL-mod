@@ -24,7 +24,7 @@ public class ModGlobalLootModifiersProvider extends GlobalLootModifierProvider {
     protected void start() {
         add("quartz_from_diorite", new AddItemModifier(new LootItemCondition[]{
                 LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.DIORITE).build(),
-                LootItemRandomChanceCondition.randomChance(0.9f).build()}, Items.QUARTZ.asItem()));
+                LootItemRandomChanceCondition.randomChance(0.05f).build()}, Items.QUARTZ.asItem()));
 
         add("ruby_from_jungle_chests", new AddItemModifier(new LootItemCondition[]{
                 new LootTableIdCondition.Builder(new ResourceLocation("chests/jungle_temple")).build(),
