@@ -1,5 +1,9 @@
 package net.electrodash24.mojang_works_a_lot_mod.entity.custom;
 
+import net.electrodash24.mojang_works_a_lot_mod.entity.ai.BruteAttackGoal;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.AnimationState;
@@ -23,16 +27,22 @@ import net.minecraft.world.level.Level;
 
 public class BruteEntity extends AbstractIllager {
 
+    private static final EntityDataAccessor<Boolean> ATTACKING =
+            SynchedEntityData.defineId(BruteEntity.class, EntityDataSerializers.BOOLEAN);
+
     public BruteEntity(EntityType<? extends AbstractIllager> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     public final AnimationState idleAnimationState = new AnimationState();
-    private float idleAnimationTimeout = 0.3f;
+    private int idleAnimationTimeout = 0;
+
+    public final AnimationState attackAnimationState = new AnimationState();
+    public int attackAnimationTimeout = 0;
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.35D)
+                .add(Attributes.MOVEMENT_SPEED, 0.15D)
                 .add(Attributes.FOLLOW_RANGE, 12.0D)
                 .add(Attributes.MAX_HEALTH, 100.0D)
                 .add(Attributes.ATTACK_DAMAGE, 8.0D);
@@ -48,10 +58,21 @@ public class BruteEntity extends AbstractIllager {
 
     private void setupAnimationStates(){
         if(this.idleAnimationTimeout <= 0.0f){
-            this.idleAnimationTimeout = this.random.nextInt(40)+80;
+            this.idleAnimationTimeout = this.random.nextInt(10)+60;
             this.idleAnimationState.start(this.tickCount);
         } else {
             --this.idleAnimationTimeout;
+        }
+
+        if(this.isAttacking() && attackAnimationTimeout <= 0) {
+            attackAnimationTimeout = 18;
+            attackAnimationState.start(this.tickCount);
+        } else {
+            --this.attackAnimationTimeout;
+        }
+
+        if(!this.isAttacking()) {
+            attackAnimationState.stop();
         }
     }
 
@@ -66,11 +87,26 @@ public class BruteEntity extends AbstractIllager {
         this.walkAnimation.update(f, 0.2f);
     }
 
+    public void setAttacking(boolean attacking) {
+        this.entityData.set(ATTACKING, attacking);
+    }
+
+    public boolean isAttacking() {
+        return this.entityData.get(ATTACKING);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING, false);
+    }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
 
+        this.goalSelector.addGoal(1, new BruteAttackGoal(this,1.0D,true));
         this.goalSelector.addGoal(2, new AbstractIllager.RaiderOpenDoorGoal(this));
         this.goalSelector.addGoal(3, new Raider.HoldGroundAttackGoal(this, 10.0F));
 
