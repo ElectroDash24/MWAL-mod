@@ -61,7 +61,14 @@ public class BruteModel<T extends Entity> extends HierarchicalModel<T> {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		this.applyHeadRotation( netHeadYaw,headPitch, ageInTicks);
 
-		this.animateWalk(BruteAnimations.walk_passive,limbSwing,limbSwingAmount,2f,2.5f);
+		BruteEntity bruteEntity = (BruteEntity) entity;
+
+		if (bruteEntity.isAggressive()) {
+			this.animateWalk(BruteAnimations.walk_agressive, limbSwing, limbSwingAmount, 2f, 1.0f);
+		} else {
+			this.animateWalk(BruteAnimations.walk_passive, limbSwing, limbSwingAmount, 2f, 1.0f);
+		}
+
 		this.animate(((BruteEntity) entity).idleAnimationState, BruteAnimations.idle,ageInTicks,1f);
 		this.animate(((BruteEntity) entity).attackAnimationState, BruteAnimations.attack, ageInTicks, 1f);
 	}
