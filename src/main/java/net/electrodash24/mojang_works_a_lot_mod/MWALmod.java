@@ -6,6 +6,7 @@ import net.electrodash24.mojang_works_a_lot_mod.entity.ModEntities;
 import net.electrodash24.mojang_works_a_lot_mod.entity.client.BruteRenderer;
 import net.electrodash24.mojang_works_a_lot_mod.item.ModCreativeModeTabs;
 import net.electrodash24.mojang_works_a_lot_mod.item.ModItems;
+import net.electrodash24.mojang_works_a_lot_mod.loot.ModLootModifiers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -45,6 +46,7 @@ public class MWALmod
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModLootModifiers.register(modEventBus);
         ModEntities.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
