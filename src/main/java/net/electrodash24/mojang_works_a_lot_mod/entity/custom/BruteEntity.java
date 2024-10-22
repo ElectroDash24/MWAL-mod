@@ -40,6 +40,9 @@ public class BruteEntity extends AbstractIllager {
     public final AnimationState attackAnimationState = new AnimationState();
     public int attackAnimationTimeout = 0;
 
+    public final AnimationState watchAnimationState = new AnimationState();
+    public int watchAnimationTimeout = this.random.nextInt(50)+500;
+
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
@@ -62,8 +65,17 @@ public class BruteEntity extends AbstractIllager {
         if (this.idleAnimationTimeout <= 0.0f) {
             this.idleAnimationTimeout = this.random.nextInt(10) + 60;
             this.idleAnimationState.start(this.tickCount);
+
         } else {
             --this.idleAnimationTimeout;
+        }
+
+        if (this.watchAnimationTimeout <= 0.0f) {
+            this.watchAnimationTimeout = this.random.nextInt(50) + 500;
+            this.watchAnimationState.start(this.tickCount);
+
+        } else {
+            --this.watchAnimationTimeout;
         }
 
         if (this.isAttacking() && attackAnimationTimeout <= 0) {
