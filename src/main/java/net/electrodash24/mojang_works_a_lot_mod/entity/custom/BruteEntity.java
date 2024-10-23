@@ -7,6 +7,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -22,6 +23,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 public class BruteEntity extends AbstractIllager {
@@ -65,6 +68,16 @@ public class BruteEntity extends AbstractIllager {
             setupAnimationStates();
         } else {
             setAggresive(this.getTarget() != null);
+
+            if (this.isAggressive()) {
+                if (!this.hasItemInSlot(EquipmentSlot.MAINHAND)) {
+                    this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
+                }
+            } else {
+                if (this.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.IRON_AXE) {
+                    this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                }
+            }
 
             for (Goal goal : this.goalSelector.getAvailableGoals()) {
                 if (goal instanceof BruteRoarGoal) {
