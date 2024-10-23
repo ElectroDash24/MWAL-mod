@@ -72,6 +72,7 @@ public class BruteModel<T extends Entity> extends HierarchicalModel<T> {
 		this.animate(((BruteEntity) entity).idleAnimationState, BruteAnimations.idle,ageInTicks,1f);
 		this.animate(((BruteEntity) entity).watchAnimationState, BruteAnimations.watch,ageInTicks,1f);
 		this.animate(((BruteEntity) entity).attackAnimationState, BruteAnimations.attack, ageInTicks, 1f);
+		this.animate(((BruteEntity) entity).roarAnimationState, BruteAnimations.roar, ageInTicks, 1f);
 	}
 
 	private void applyHeadRotation(float pNetHeadYaw, float pNetHeadPitch, float pAgeInTicks){

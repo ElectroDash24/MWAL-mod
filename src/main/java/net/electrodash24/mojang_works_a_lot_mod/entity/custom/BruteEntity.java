@@ -1,6 +1,7 @@
 package net.electrodash24.mojang_works_a_lot_mod.entity.custom;
 
 import net.electrodash24.mojang_works_a_lot_mod.entity.ai.BruteAttackGoal;
+import net.electrodash24.mojang_works_a_lot_mod.entity.ai.BruteRoarGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -30,6 +32,9 @@ public class BruteEntity extends AbstractIllager {
     private static final EntityDataAccessor<Boolean> AGGRESIVE =
             SynchedEntityData.defineId(BruteEntity.class, EntityDataSerializers.BOOLEAN);
 
+    private static final EntityDataAccessor<Boolean> ROARING =
+            SynchedEntityData.defineId(BruteEntity.class, EntityDataSerializers.BOOLEAN);
+
     public BruteEntity(EntityType<? extends AbstractIllager> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -40,6 +45,8 @@ public class BruteEntity extends AbstractIllager {
     public final AnimationState attackAnimationState = new AnimationState();
     public int attackAnimationTimeout = 0;
 
+    public final AnimationState roarAnimationState = new AnimationState();
+    public int roarAnimationTimeout = 0;
     public final AnimationState watchAnimationState = new AnimationState();
     public int watchAnimationTimeout = this.random.nextInt(50)+500;
 
@@ -58,24 +65,31 @@ public class BruteEntity extends AbstractIllager {
             setupAnimationStates();
         } else {
             setAggresive(this.getTarget() != null);
+
+            for (Goal goal : this.goalSelector.getAvailableGoals()) {
+                if (goal instanceof BruteRoarGoal) {
+                    ((BruteRoarGoal) goal).tickCooldown();
+                }
+            }
         }
     }
 
     private void setupAnimationStates() {
+
+        if (this.watchAnimationTimeout <= 0.0f && this.idleAnimationTimeout <= 0.0f) {
+            this.watchAnimationTimeout = this.random.nextInt(50) + 500;
+            this.watchAnimationState.start(this.tickCount);
+
+        } else {
+            --this.watchAnimationTimeout;
+        }
+
         if (this.idleAnimationTimeout <= 0.0f) {
             this.idleAnimationTimeout = this.random.nextInt(10) + 60;
             this.idleAnimationState.start(this.tickCount);
 
         } else {
             --this.idleAnimationTimeout;
-        }
-
-        if (this.watchAnimationTimeout <= 0.0f) {
-            this.watchAnimationTimeout = this.random.nextInt(50) + 500;
-            this.watchAnimationState.start(this.tickCount);
-
-        } else {
-            --this.watchAnimationTimeout;
         }
 
         if (this.isAttacking() && attackAnimationTimeout <= 0) {
@@ -87,6 +101,17 @@ public class BruteEntity extends AbstractIllager {
 
         if (!this.isAttacking()) {
             attackAnimationState.stop();
+        }
+
+        if (this.isRoaring() && roarAnimationTimeout <= 0) {
+            roarAnimationTimeout = 80;
+            roarAnimationState.start(this.tickCount);
+        } else {
+            --this.roarAnimationTimeout;
+        }
+
+        if (!this.isAttacking()) {
+            roarAnimationState.stop();
         }
     }
 
@@ -117,11 +142,20 @@ public class BruteEntity extends AbstractIllager {
         return this.entityData.get(AGGRESIVE);
     }
 
+    public void setRoaring(boolean hasTarget){
+        this.entityData.set(ROARING, hasTarget);
+    }
+
+    public boolean isRoaring() {
+        return this.entityData.get(ROARING);
+    }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ATTACKING, false);
         this.entityData.define(AGGRESIVE, false);
+        this.entityData.define(ROARING, false);
     }
 
     @Override
@@ -132,6 +166,7 @@ public class BruteEntity extends AbstractIllager {
         this.goalSelector.addGoal(1, new BruteAttackGoal(this, 1.0D, true));
         this.goalSelector.addGoal(2, new AbstractIllager.RaiderOpenDoorGoal(this));
         this.goalSelector.addGoal(3, new Raider.HoldGroundAttackGoal(this, 10.0F));
+        this.goalSelector.addGoal(4, new BruteRoarGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers(Raider.class));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
