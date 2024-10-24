@@ -69,16 +69,6 @@ public class BruteEntity extends AbstractIllager {
         } else {
             setAggresive(this.getTarget() != null);
 
-            if (this.isAggressive()) {
-                if (!this.hasItemInSlot(EquipmentSlot.MAINHAND)) {
-                    this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
-                }
-            } else {
-                if (this.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.IRON_AXE) {
-                    this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-                }
-            }
-
             for (Goal goal : this.goalSelector.getAvailableGoals()) {
                 if (goal instanceof BruteRoarGoal) {
                     ((BruteRoarGoal) goal).tickCooldown();

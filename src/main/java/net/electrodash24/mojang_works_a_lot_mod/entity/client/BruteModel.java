@@ -5,19 +5,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.electrodash24.mojang_works_a_lot_mod.entity.animations.BruteAnimations;
 import net.electrodash24.mojang_works_a_lot_mod.entity.custom.BruteEntity;
-import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.IronGolemRenderer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.HumanoidArm;
 
-
-public class BruteModel<T extends Entity> extends HierarchicalModel<T> {
+public class BruteModel<T extends Entity> extends HierarchicalModel<T>{
 
 	private final ModelPart body;
 	private final ModelPart torso;
@@ -95,9 +90,5 @@ public class BruteModel<T extends Entity> extends HierarchicalModel<T> {
 	@Override
 	public ModelPart root() {
 		return body;
-	}
-
-	public ModelPart getArmHoldingAxe() {
-		return this.arm0;
 	}
 }

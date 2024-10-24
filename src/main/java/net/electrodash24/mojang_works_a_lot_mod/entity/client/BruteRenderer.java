@@ -4,23 +4,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.electrodash24.mojang_works_a_lot_mod.MWALmod;
 import net.electrodash24.mojang_works_a_lot_mod.entity.custom.BruteEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class BruteRenderer extends MobRenderer<BruteEntity, BruteModel<BruteEntity>> {
 
     public BruteRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new BruteModel<>(pContext.bakeLayer(ModModelLayers.BRUTE_LAYER)),0.7f);
-        this.addLayer(new BruteAxeLayer(this, Minecraft.getInstance().getItemRenderer()));
     }
 
     @Override
